@@ -33,7 +33,7 @@ Three momentary switches, accessed via `hw.GetButton(SW_*)`:
 |----------|------|-----|
 | `SW_FREEZE` | Snowflake | `LED_FREEZE` (directly attached) |
 | `SW_REVERSE` | Arrows (mode) | `LED_REVERSE` (directly attached) |
-| `SW_SHIFT` | Unknown | None |
+| `SW_SHIFT` | None | None |
 
 `SW_FREEZE` and `SW_REVERSE` are the only controls with a physically attached LED.
 
