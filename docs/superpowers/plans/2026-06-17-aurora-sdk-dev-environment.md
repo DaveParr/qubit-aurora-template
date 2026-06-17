@@ -104,9 +104,9 @@ git commit -m "chore: install ARM toolchain to ~/.local, add .gitignore"
 **Interfaces:**
 - Produces:
   - `lib/Aurora-SDK/` — Aurora BSP source tree
-  - `lib/Aurora-SDK/libDaisy/` — libDaisy pulled via recursive init
-  - `lib/Aurora-SDK/libDaisy/core/Makefile` — libDaisy build system entry point (verify in Step 3)
-  - At least one example directory at `lib/Aurora-SDK/examples/` (used in Task 5)
+  - `lib/Aurora-SDK/libs/libDaisy/` — libDaisy pulled via recursive init
+  - `lib/Aurora-SDK/libs/libDaisy/core/Makefile` — libDaisy build system entry point (verify in Step 3)
+  - At least one example directory at `lib/Aurora-SDK/Examples/` (used in Task 5)
 
 - [ ] **Step 1: Add the submodule**
 
@@ -128,14 +128,14 @@ This pulls libDaisy and its own STM32 HAL sub-dependencies through the Aurora SD
 
 ```bash
 ls lib/Aurora-SDK/
-ls lib/Aurora-SDK/libDaisy/
-ls lib/Aurora-SDK/libDaisy/core/
+ls lib/Aurora-SDK/libs/libDaisy/
+ls lib/Aurora-SDK/libs/libDaisy/core/
 ```
 
-Confirm `lib/Aurora-SDK/libDaisy/core/Makefile` exists — Tasks 3 and 5 depend on it.
+Confirm `lib/Aurora-SDK/libs/libDaisy/core/Makefile` exists — Tasks 3 and 5 depend on it.
 
 ```bash
-ls lib/Aurora-SDK/examples/
+ls lib/Aurora-SDK/Examples/
 ```
 
 Note the name of one example directory — you will read its Makefile in Task 5.
@@ -165,7 +165,7 @@ git commit -m "chore: add Aurora-SDK as git submodule with libDaisy"
 - Produces (for any Makefile that does `include ../config.mk` or `include config.mk`):
   - `GCC_PATH` — absolute path to `arm-none-eabi-gcc` bin directory, default `~/.local/share/gcc-arm-none-eabi/gcc-arm-none-eabi-10-2020-q4-major/bin`
   - `AURORA_SDK_DIR` — absolute path to `lib/Aurora-SDK`, resolved relative to `config.mk`'s own location
-  - `LIBDAISY_DIR` — `$(AURORA_SDK_DIR)/libDaisy`
+  - `LIBDAISY_DIR` — `$(AURORA_SDK_DIR)/libs/libDaisy`
   - All three use `?=` — overridable from CLI
 
 - [ ] **Step 1: Create config.mk**
@@ -183,7 +183,7 @@ GCC_PATH ?= $(HOME)/.local/share/gcc-arm-none-eabi/gcc-arm-none-eabi-10-2020-q4-
 _CONFIG_MK_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 AURORA_SDK_DIR ?= $(_CONFIG_MK_DIR)lib/Aurora-SDK
-LIBDAISY_DIR   ?= $(AURORA_SDK_DIR)/libDaisy
+LIBDAISY_DIR   ?= $(AURORA_SDK_DIR)/libs/libDaisy
 ```
 
 - [ ] **Step 2: Verify the variables resolve to real paths**
@@ -197,13 +197,13 @@ Expected (your home directory will differ):
 ```
 GCC_PATH=/home/dave/.local/share/gcc-arm-none-eabi/gcc-arm-none-eabi-10-2020-q4-major/bin
 AURORA_SDK_DIR=/home/dave/Development/aurora/lib/Aurora-SDK
-LIBDAISY_DIR=/home/dave/Development/aurora/lib/Aurora-SDK/libDaisy
+LIBDAISY_DIR=/home/dave/Development/aurora/lib/Aurora-SDK/libs/libDaisy
 ```
 
 Then verify each path actually exists:
 ```bash
 ls ~/.local/share/gcc-arm-none-eabi/gcc-arm-none-eabi-10-2020-q4-major/bin/arm-none-eabi-gcc
-ls /home/dave/Development/aurora/lib/Aurora-SDK/libDaisy/core/Makefile
+ls /home/dave/Development/aurora/lib/Aurora-SDK/libs/libDaisy/core/Makefile
 ```
 
 Both should return the file path without error.
@@ -298,11 +298,11 @@ git commit -m "chore: add top-level Makefile with build and flash targets"
 
 ```bash
 # List available examples
-ls /home/dave/Development/aurora/lib/Aurora-SDK/examples/
+ls /home/dave/Development/aurora/lib/Aurora-SDK/Examples/
 
 # Pick the first one and read its Makefile
-EXAMPLE=$(ls /home/dave/Development/aurora/lib/Aurora-SDK/examples/ | head -1)
-cat /home/dave/Development/aurora/lib/Aurora-SDK/examples/$EXAMPLE/Makefile
+EXAMPLE=$(ls /home/dave/Development/aurora/lib/Aurora-SDK/Examples/ | head -1)
+cat /home/dave/Development/aurora/lib/Aurora-SDK/Examples/$EXAMPLE/Makefile
 ```
 
 Note:
@@ -312,8 +312,8 @@ Note:
 
 ```bash
 # Also read the example's .cpp to find the correct Aurora header
-cat /home/dave/Development/aurora/lib/Aurora-SDK/examples/$EXAMPLE/*.cpp 2>/dev/null || \
-cat /home/dave/Development/aurora/lib/Aurora-SDK/examples/$EXAMPLE/*.cc 2>/dev/null
+cat /home/dave/Development/aurora/lib/Aurora-SDK/Examples/$EXAMPLE/*.cpp 2>/dev/null || \
+cat /home/dave/Development/aurora/lib/Aurora-SDK/Examples/$EXAMPLE/*.cc 2>/dev/null
 ```
 
 Note the `#include` at the top — this is the Aurora BSP header you will use in `main.cpp`.
