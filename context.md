@@ -40,14 +40,18 @@
 
 **Verified physical positions (confirmed by hardware test):**
 
-| SDK name | Knob driving it | Physical position |
-|----------|----------------|-------------------|
-| `LED_BOT_1` | `KNOB_TIME` | Middle of module |
-| `LED_BOT_2` | `KNOB_REFLECT` | Right of module |
-| `LED_BOT_3` | `KNOB_MIX` | Top of module |
+| SDK name | Physical position |
+|----------|-------------------|
+| `LED_BOT_1` | Middle of module |
+| `LED_BOT_2` | Right of module |
+| `LED_BOT_3` | Top of module |
 
 ## Knob Physical Layout
 
-Two columns, top to bottom, left to right:
-- Left column: WARP, BLUR, MIX
-- Right column: TIME, REFLECT, ATMOSPHERE
+Two columns, top to bottom:
+
+```
+  WARP       TIME
+  BLUR    REFLECT
+   MIX  ATMOSPHERE
+```
