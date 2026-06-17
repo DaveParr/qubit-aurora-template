@@ -25,11 +25,17 @@
 - The code mapping (KNOB_TIME → LED_1, etc.) is **logical**, not spatial. Do not redesign
   around physical adjacency unless explicitly requested.
 
-## Button LEDs (physically paired)
+## Buttons
 
-- `SW_FREEZE` button has `LED_FREEZE` directly attached — snowflake icon.
-- `SW_REVERSE` button has `LED_REVERSE` directly attached — arrows icon, relates to mode.
-- These are the only LEDs with a clear physical/semantic relationship to a control.
+Three momentary switches, accessed via `hw.GetButton(SW_*)`:
+
+| SDK name | Icon | LED |
+|----------|------|-----|
+| `SW_FREEZE` | Snowflake | `LED_FREEZE` (directly attached) |
+| `SW_REVERSE` | Arrows (mode) | `LED_REVERSE` (directly attached) |
+| `SW_SHIFT` | Unknown | None |
+
+`SW_FREEZE` and `SW_REVERSE` are the only controls with a physically attached LED.
 
 ## Bottom LEDs
 
