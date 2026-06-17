@@ -10,7 +10,7 @@ Extend the minimal `hello-aurora` starter project to:
 1. Map each of the 6 knobs to the hue of a corresponding abstract LED, cycling through the full rainbow as the knob is turned.
 2. Pass stereo audio through the module with volume controlled by the MIX knob.
 3. Light the FREEZE and REVERSE button LEDs while their buttons are held.
-4. Leave the bottom LEDs (`LED_BOT_1/2/3`) dark.
+4. Drive the 3 bottom LEDs from knobs to allow physical position mapping (hardware verification).
 
 ---
 
@@ -20,7 +20,7 @@ Extend the minimal `hello-aurora` starter project to:
 - **11 RGB LEDs total:**
   - `LED_1`–`LED_6`: abstract/decorative — not physically adjacent to any knob
   - `LED_FREEZE`, `LED_REVERSE`: physically attached to their respective buttons
-  - `LED_BOT_1/2/3`: unknown physical location; green+blue only (no red channel); left dark
+  - `LED_BOT_1/2/3`: unknown physical location; green+blue only (no red channel); driven by knobs for physical position verification
 - **2 buttons:** `SW_FREEZE` (snowflake icon), `SW_REVERSE` (arrows icon, relates to mode)
 - **API:** `hw.GetButton(SW_FREEZE).Pressed()` — use `GetButton`, not the stale `GetSwitch` comment in the header
 
@@ -69,7 +69,7 @@ Knob→LED mapping (logical, not spatial):
 | `KNOB_BLUR` | `LED_5` |
 | `KNOB_WARP` | `LED_6` |
 
-`KNOB_MIX` doubles as both volume control and `LED_3` hue — same physical dial, two effects.
+`KNOB_MIX` drives three things — volume, `LED_3` hue, and `LED_BOT_3` hue — all from the same physical dial.
 
 ### `audio.h`
 
@@ -87,7 +87,7 @@ StereoFrame scaleVolume(StereoFrame in, float volume);
 Responsibilities:
 - `hw.Init()` and `hw.StartAudio(AudioCallback)`
 - Audio callback: `hw.ProcessAllControls()`, read `KNOB_MIX`, call `scaleVolume()` per sample
-- Main loop (runs as fast as possible — no delay): `hw.ClearLeds()`, set `LED_1`–`LED_6` via `hsvToRgb(hw.GetKnobValue(knob), 1, 1)`, set button LEDs, `hw.WriteLeds()`
+- Main loop (runs as fast as possible — no delay): `hw.ClearLeds()`, set `LED_1`–`LED_6` and `LED_BOT_1`–`LED_BOT_3` via `hsvToRgb(hw.GetKnobValue(knob), 1, 1)`, set button LEDs, `hw.WriteLeds()`
 - Button LEDs: `GetButton(SW_FREEZE).Pressed()` → `SetLed(LED_FREEZE, 1,1,1)`, else off; same for `SW_REVERSE`/`LED_REVERSE`
 
 ---
