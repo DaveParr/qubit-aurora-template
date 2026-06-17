@@ -33,14 +33,18 @@
 
 ## Bottom LEDs
 
-- `LED_BOT_1`, `LED_BOT_2`, `LED_BOT_3` — physical location unknown beyond "bottom".
 - Hardware constraint: no red channel (`r = -1` in LedMap), green and blue only.
   The SDK silently discards the red value — no crash, G and B still set normally.
-- Driven by knob hue (same `hsvToRgb` path as numbered LEDs); red component is just dropped.
-- **Initial mapping (unverified — update after hardware test):**
-  - `LED_BOT_1` → `KNOB_TIME`
-  - `LED_BOT_2` → `KNOB_REFLECT`
-  - `LED_BOT_3` → `KNOB_MIX`
+- The "BOT" name refers to the LED driver chip, not physical position — these LEDs
+  are scattered around the module, not grouped at the bottom.
+
+**Verified physical positions (confirmed by hardware test):**
+
+| SDK name | Knob driving it | Physical position |
+|----------|----------------|-------------------|
+| `LED_BOT_1` | `KNOB_TIME` | Middle of module |
+| `LED_BOT_2` | `KNOB_REFLECT` | Right of module |
+| `LED_BOT_3` | `KNOB_MIX` | Top of module |
 
 ## Knob Physical Layout
 
