@@ -17,4 +17,15 @@
 
 - `LED_BOT_1`, `LED_BOT_2`, `LED_BOT_3` — physical location unknown beyond "bottom".
 - Hardware constraint: no red channel (`r = -1` in LedMap), green and blue only.
-- Left dark for now — not used in the initial feature.
+  The SDK silently discards the red value — no crash, G and B still set normally.
+- Driven by knob hue (same `hsvToRgb` path as numbered LEDs); red component is just dropped.
+- **Initial mapping (unverified — update after hardware test):**
+  - `LED_BOT_1` → `KNOB_TIME`
+  - `LED_BOT_2` → `KNOB_REFLECT`
+  - `LED_BOT_3` → `KNOB_MIX`
+
+## Knob Physical Layout
+
+Two columns, top to bottom, left to right:
+- Left column: WARP, BLUR, MIX
+- Right column: TIME, REFLECT, ATMOSPHERE

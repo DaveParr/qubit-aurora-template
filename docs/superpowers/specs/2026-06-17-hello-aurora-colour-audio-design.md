@@ -124,9 +124,27 @@ Compiles with `g++` on the host. No ARM toolchain required. Runs both test binar
 
 ---
 
+## Bottom LEDs
+
+`LED_BOT_1`, `LED_BOT_2`, `LED_BOT_3` use the same `hsvToRgb` path as the numbered LEDs.
+The red component is silently discarded by the SDK (`SetLed` guards on `led.r != -1`), so only
+green and blue are visible — this is accepted hardware behaviour, not a bug.
+
+Initial knob mapping (arbitrary — pending hardware verification):
+
+| Bottom LED | Knob |
+|------------|------|
+| `LED_BOT_1` | `KNOB_TIME` |
+| `LED_BOT_2` | `KNOB_REFLECT` |
+| `LED_BOT_3` | `KNOB_MIX` |
+
+Once flashed, manually test which bottom LED responds to which knob and record the real
+physical positions in `context.md`.
+
+---
+
 ## Out of Scope
 
 - CV inputs (not wired in this feature)
-- `LED_BOT_1/2/3` (left dark)
 - Any use of `SW_SHIFT` or gate inputs
 - Calibration or persistent storage
