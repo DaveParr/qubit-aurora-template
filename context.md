@@ -3,9 +3,27 @@
 ## Hardware Layout Notes
 
 - The Aurora has 6 knobs (TIME, REFLECT, MIX, ATMOSPHERE, BLUR, WARP) and 11 RGB LEDs.
-- The numbered LEDs (LED_1 through LED_6) are **not** physically adjacent to the knobs.
-  They are abstract/decorative — the knob-to-LED mapping is a logical one, not a spatial one.
-- Do not design UX around the assumption that a LED is "next to" its paired knob.
+- The numbered LEDs (LED_1 through LED_6) form an arc around the module — like an upside-down L:
+
+```
+  [2]   [3]   [4]
+                 [5]
+[1]              [6]
+```
+
+  - `LED_1` — bottom left
+  - `LED_2`, `LED_3`, `LED_4` — across the top (left to right)
+  - `LED_5`, `LED_6` — down the right side (top to bottom)
+
+- Physical adjacency to knobs (informational — do NOT assume LEDs are "paired" to these knobs):
+  - `LED_2` is near `KNOB_WARP`
+  - `LED_4` is near `KNOB_TIME`
+  - `LED_5` is near `KNOB_REFLECT`
+  - `LED_6` is near `KNOB_ATMOSPHERE`
+  - `LED_1` and `LED_3` have no adjacent knob
+
+- The code mapping (KNOB_TIME → LED_1, etc.) is **logical**, not spatial. Do not redesign
+  around physical adjacency unless explicitly requested.
 
 ## Button LEDs (physically paired)
 
