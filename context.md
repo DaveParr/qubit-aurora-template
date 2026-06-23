@@ -7,11 +7,11 @@
 
 ```
   [2]   [3]   [4]
-                 [5]
-[1]              [6]
+  [1]         [5]
+              [6]
 ```
 
-  - `LED_1` — bottom left
+  - `LED_1` — left
   - `LED_2`, `LED_3`, `LED_4` — across the top (left to right)
   - `LED_5`, `LED_6` — down the right side (top to bottom)
 
@@ -39,12 +39,10 @@ Three momentary switches, accessed via `hw.GetButton(SW_*)`:
 
 ## Bottom LEDs
 
-- Hardware constraint: no red channel (`r = -1` in LedMap), green and blue only.
-  The SDK silently discards the red value — no crash, G and B still set normally.
-- The "BOT" name refers to the LED driver chip, not physical position — these LEDs
-  are scattered around the module, not grouped at the bottom.
+- Hardware constraint: no red channel (`r = -1` in LedMap), green and blue only. The SDK silently discards the red value — no crash, G and B still set normally.
+- The "BOT" name refers to the base of the module. The backside that is pointed into the rack. They are minimally visible in many mounted systems.
 
-**Verified physical positions (confirmed by hardware test):**
+**Verified physical positions**
 
 | SDK name | Physical position |
 |----------|-------------------|
