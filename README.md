@@ -109,17 +109,7 @@ If the entry is missing or shows an error, check that `hello-aurora.bin` is the 
 
 ## Starting your own project
 
-1. Copy `hello-aurora/` to a new directory:
-   ```sh
-   cp -r hello-aurora my-effect
-   ```
-2. Update the `TARGET` variable in `my-effect/Makefile` to match the folder name.
-3. Edit `my-effect/main.cpp` — the `hw` object, `AudioCallback`, and `main` loop are your entry points.
-4. Build and flash:
-   ```sh
-   make build PROJECT=my-effect
-   make flash PROJECT=my-effect MOUNT=/media/YOUR_USER/YOUR_DRIVE
-   ```
+From there the world is yours! Start writing code and show us what you got!
 
 ## Hardware reference
 
