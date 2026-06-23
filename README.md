@@ -24,9 +24,17 @@ The `hello-aurora/tests/` directory has host-side unit tests for the `colour.h` 
 
 ## Getting started
 
-### 1. Use this template
+### 1. Create your repository from this template
 
-Click **"Use this template"** on GitHub (top-right of the repo page) to create your own repository. Then clone it **with submodules**:
+**Option A — GitHub UI:** Click **"Use this template"** → **"Create a new repository"** on the repo page. Give it a name and finish the wizard. GitHub creates the remote repository; nothing is cloned yet.
+
+**Option B — GitHub CLI:**
+
+```sh
+gh repo create YOUR_REPO --template OWNER/aurora --public --clone=false
+```
+
+Once the remote exists, clone it **with submodules**:
 
 ```sh
 git clone --recurse-submodules https://github.com/YOUR_USERNAME/YOUR_REPO.git
@@ -38,6 +46,8 @@ If you forgot `--recurse-submodules`:
 ```sh
 git submodule update --init --recursive
 ```
+
+A suggested name convention would be 'Aurora-*'.
 
 ### 2. Install the ARM toolchain
 
