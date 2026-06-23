@@ -99,6 +99,14 @@ Then:
 2. Insert it into the Aurora module
 3. Power up the Aurora with the USB drive inserted — the bootloader loads the firmware at boot
 
+**Verify it loaded:** power down, re-insert the USB drive into your computer, and check `daisy_boot_log.txt`. The newest entry should read:
+
+```
+N. Successfully flashed file "hello-aurora.bin" to address 0x90040000
+```
+
+If the entry is missing or shows an error, check that `hello-aurora.bin` is the only `.bin` file in the root of the drive.
+
 ## Starting your own project
 
 1. Copy `hello-aurora/` to a new directory:
