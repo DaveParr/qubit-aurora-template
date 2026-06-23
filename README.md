@@ -73,21 +73,9 @@ make libdaisy
 
 This compiles the libDaisy static library from source inside the submodule. Only needed once, or after updating the submodule.
 
-### 4. Build and flash hello-aurora
 
-Put the Aurora into **bootloader mode** (hold the encoder while powering on, or use the bootloader firmware), then mount the USB drive it presents.
 
-```sh
-# Build
-make build PROJECT=hello-aurora
-
-# Flash (adjust MOUNT to where the Aurora appears on your system)
-make flash PROJECT=hello-aurora MOUNT=/media/YOUR_USER/AURORA
-```
-
-The `flash` target copies the `.bin` and syncs — safely eject the Aurora afterward to boot into your firmware.
-
-### 5. Run the unit tests
+### 4. Run the unit tests
 
 The tests compile and run on your host machine (no hardware needed):
 
@@ -95,6 +83,21 @@ The tests compile and run on your host machine (no hardware needed):
 cd hello-aurora/tests
 make
 ```
+
+### 5. Build and flash hello-aurora
+
+```sh
+# Build
+make build PROJECT=hello-aurora
+
+# Copy .bin to USB drive (adjust MOUNT to where your USB drive is mounted)
+make flash PROJECT=hello-aurora MOUNT=/media/YOUR_USER/YOUR_DRIVE
+```
+
+Then:
+1. Eject the USB drive from your computer
+2. Insert it into the Aurora module
+3. Power up the Aurora with the USB drive inserted — the bootloader loads the firmware at boot
 
 ## Starting your own project
 
@@ -107,7 +110,7 @@ make
 4. Build and flash:
    ```sh
    make build PROJECT=my-effect
-   make flash PROJECT=my-effect MOUNT=/media/YOUR_USER/AURORA
+   make flash PROJECT=my-effect MOUNT=/media/YOUR_USER/YOUR_DRIVE
    ```
 
 ## Hardware reference
