@@ -1,5 +1,5 @@
 ---
-name: run-aurora-morse
+name: run-aurora
 description: Build and flash Aurora eurorack firmware. Use when asked to build, compile, flash, or load firmware onto the Aurora USB drive.
 ---
 
