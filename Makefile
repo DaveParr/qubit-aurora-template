@@ -6,8 +6,7 @@ build:
 ifndef PROJECT
 	$(error PROJECT is not set. Usage: make build PROJECT=hello-aurora)
 endif
-	$(MAKE) -C $(PROJECT) TARGET=$(PROJECT)-$(FIRMWARE_VERSION) \
-		'C_DEFS=-DFIRMWARE_VERSION=\"$(FIRMWARE_VERSION)\"'
+	$(MAKE) -C $(PROJECT) TARGET=$(PROJECT)-$(FIRMWARE_VERSION)
 
 flash:
 ifndef PROJECT
