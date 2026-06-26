@@ -39,30 +39,52 @@ push / PR         tag v*
 
 The git tag is the single source of truth for the version. No `VERSION` file or separate version commit is needed.
 
-CI derives the version at build time:
+`config.mk` derives the version from git at build time:
 
-```bash
-# On a v* tag push:
-VERSION=$(git describe --tags --exact-match | sed 's/^v//')
-# → "1.2.0"
-
-# On any other push/PR:
-VERSION="dev"
+```makefile
+FIRMWARE_VERSION ?= $(shell git describe --tags --exact-match 2>/dev/null | sed 's/^v//' || echo dev)
 ```
 
-The version is passed to the compiler via `C_DEFS`:
+- On a tagged commit (`v1.2.0`): `FIRMWARE_VERSION = 1.2.0`
+- On any untagged commit: `FIRMWARE_VERSION = dev`
 
-```bash
-make build PROJECT=foo C_DEFS="-DFIRMWARE_VERSION=\"${VERSION}\""
+The `?=` means CI can override it by passing `FIRMWARE_VERSION=1.2.0` on the command line, ensuring the exact tag value is used in release builds.
+
+### Binary naming
+
+The top-level Makefile passes `TARGET` to the sub-make, naming the binary after both the project and the version:
+
+```makefile
+build:
+    $(MAKE) -C $(PROJECT) TARGET=$(PROJECT)-$(FIRMWARE_VERSION)
 ```
 
-This injects a preprocessor define accessible in firmware source:
+This produces `<project>/build/<project>-<version>.bin` — e.g. `hello-aurora/build/hello-aurora-1.2.0.bin` on a tagged build, or `hello-aurora/build/hello-aurora-dev.bin` locally.
+
+The `flash` target is updated to match:
+
+```makefile
+flash:
+    cp "$(PROJECT)/build/$(PROJECT)-$(FIRMWARE_VERSION).bin" "$(MOUNT)/"
+```
+
+### Firmware version at runtime
+
+The version is also injected as a preprocessor define via `C_DEFS`:
+
+```makefile
+build:
+    $(MAKE) -C $(PROJECT) TARGET=$(PROJECT)-$(FIRMWARE_VERSION) \
+        C_DEFS="-DFIRMWARE_VERSION=\"$(FIRMWARE_VERSION)\""
+```
+
+Accessible in firmware source:
 
 ```cpp
 const char* version = FIRMWARE_VERSION; // "1.2.0" or "dev"
 ```
 
-`C_DEFS` is the right hook: the libDaisy core Makefile declares it with `?=` (so our command-line value takes effect) and then appends all required STM32 defines via `+=` (so they are not lost). No changes to `config.mk` or any project Makefile are required.
+`C_DEFS` is the right hook: the libDaisy core Makefile declares it with `?=` (so our value takes effect) and then appends all required STM32 defines via `+=` (so they are not lost).
 
 ## Project Discovery
 
@@ -78,17 +100,7 @@ find . -maxdepth 1 -mindepth 1 -type d \
 
 Each discovered project is built in sequence. If a project fails, CI reports its name and continues building remaining projects so all failures are visible in a single run.
 
-Built artifacts are collected from `<project>/build/<project>.bin` and uploaded as a single `firmware` workflow artifact.
-
-## Release Artifact Naming
-
-At upload time, CI renames each binary to include the version:
-
-```
-hello-aurora-v1.2.0.bin
-```
-
-This makes downloaded files unambiguous regardless of which release they came from.
+Built artifacts are collected from `<project>/build/<project>-<version>.bin` and uploaded as a single `firmware` workflow artifact. No renaming step is needed — the build already produces correctly versioned filenames.
 
 ## GitHub Release
 
@@ -96,7 +108,7 @@ The `release` job uses the GitHub CLI (`gh release create`) to:
 
 - Set the release title to the tag name (e.g. `v1.2.0`)
 - Auto-generate release notes listing commits since the previous tag (`--generate-notes`)
-- Attach all renamed `.bin` files
+- Attach all `.bin` files from the `firmware` artifact (e.g. `hello-aurora-1.2.0.bin`)
 - Publish immediately (no draft)
 
 Required workflow permissions:
@@ -159,18 +171,14 @@ jobs:
           FAILED=0
           for PROJECT in $PROJECTS; do
             make build PROJECT="$PROJECT" \
-              C_DEFS="-DFIRMWARE_VERSION=\"${{ steps.version.outputs.version }}\"" \
+              FIRMWARE_VERSION="${{ steps.version.outputs.version }}" \
               || { echo "BUILD FAILED: $PROJECT"; FAILED=1; }
           done
           [ $FAILED -eq 0 ]
-      - name: Collect and rename artifacts
+      - name: Collect artifacts
         run: |
           mkdir -p dist
-          VERSION="${{ steps.version.outputs.version }}"
-          find . -path '*/build/*.bin' | while read f; do
-            name=$(basename "$f" .bin)
-            cp "$f" "dist/${name}-v${VERSION}.bin"
-          done
+          find . -path '*/build/*.bin' -exec cp {} dist/ \;
       - uses: actions/upload-artifact@v4
         with:
           name: firmware
@@ -209,3 +217,5 @@ git push origin v1.0.0
 ```
 
 GitHub Actions builds all projects, injects the version, and publishes a release with all `.bin` files attached.
+
+Local builds also produce versioned filenames automatically — `git describe` in `config.mk` picks up the tag, so `make build PROJECT=hello-aurora` on a tagged commit produces `hello-aurora/build/hello-aurora-1.0.0.bin`. On untagged commits it produces `hello-aurora-dev.bin`.
