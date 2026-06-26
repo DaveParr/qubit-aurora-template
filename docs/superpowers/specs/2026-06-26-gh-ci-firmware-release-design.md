@@ -75,7 +75,7 @@ The version is also injected as a preprocessor define via `C_DEFS`:
 ```makefile
 build:
     $(MAKE) -C $(PROJECT) TARGET=$(PROJECT)-$(FIRMWARE_VERSION) \
-        C_DEFS="-DFIRMWARE_VERSION=\"$(FIRMWARE_VERSION)\""
+        'C_DEFS=-DFIRMWARE_VERSION=\"$(FIRMWARE_VERSION)\"'
 ```
 
 Accessible in firmware source:
