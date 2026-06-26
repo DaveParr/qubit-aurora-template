@@ -22,7 +22,9 @@ jobs:
         with:
           submodules: recursive
       - name: Install ARM toolchain
-        run: sudo apt-get update -y && sudo apt-get install -y gcc-arm-none-eabi
+        run: |
+          sudo apt-get update -y && sudo apt-get install -y gcc-arm-none-eabi
+          echo "GCC_PATH=$(dirname $(which arm-none-eabi-gcc))" >> "$GITHUB_ENV"
       - name: Derive version
         id: version
         run: |
