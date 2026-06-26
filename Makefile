@@ -22,3 +22,4 @@ endif
 
 libdaisy:
 	$(MAKE) -C lib/Aurora-SDK/libs/libDaisy GCC_PATH=$(GCC_PATH)
+	$(MAKE) -C lib/Aurora-SDK/libs/DaisySP GCC_PATH=$(GCC_PATH)
