@@ -1,5 +1,7 @@
 include ../config.mk
 
+C_DEFS += -DFIRMWARE_VERSION=\"$(FIRMWARE_VERSION)\"
+
 # Project Name
 TARGET = hello-aurora
 

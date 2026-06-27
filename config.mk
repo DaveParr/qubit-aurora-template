@@ -9,3 +9,7 @@ _CONFIG_MK_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 AURORA_SDK_DIR ?= $(_CONFIG_MK_DIR)lib/Aurora-SDK
 LIBDAISY_DIR   ?= $(AURORA_SDK_DIR)/libs/libDaisy
+
+# Firmware version: exact git tag (strip leading v), or "dev" on untagged commits.
+# CI overrides this by passing FIRMWARE_VERSION=x.y.z on the command line.
+FIRMWARE_VERSION ?= $(shell (git describe --tags --exact-match 2>/dev/null || echo dev) | sed 's/^v//')
